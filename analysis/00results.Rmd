@@ -1,0 +1,24 @@
+---
+title: "Shiny plot of results"
+author: "Matthew Stephens"
+date: "5/1/2018"
+output: html_document
+---
+
+Let's take a look at the DSC results using an interactive Shiny plot:
+
+```{r}
+library(dscr)
+library(dscrutils)
+dscout <- dscquery(dsc.outdir = "../settings",
+                   targets    = c("simulate.scenario","analyze","score.error","simulate.pve"))
+dscr::shiny_plot(dscout %>% dplyr::filter(simulate.pve==0.5),"simulate.scenario","analyze")
+dscr::shiny_plot(dscout %>% dplyr::filter(simulate.pve==0.95),"simulate.scenario","analyze")
+```
+
+current summary: smash is better except in low-noise setting.
+
+
+
+
+
