@@ -1,4 +1,4 @@
-
+#' first commit
 #' @param n length of sequence to simulate
 #' @param scenario name of scenario that specifies mean function
 #' @param pve the proportion of variance explained by the mean variation
