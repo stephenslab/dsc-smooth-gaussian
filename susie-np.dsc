@@ -4,7 +4,7 @@
 # $Y an n vector of data y-axis
 # $mu_true an n vector of true means
 # $sigma a scalar of residual standard deviation
-# #mu_est an n vector of estimated means
+# $mu_est an n vector of estimated means
 # $error a scalar measure of accuracy.
 
 # module groups
@@ -51,6 +51,7 @@ susie_s10_MAD(susie_s10):
 
 # smash with Haar wavelet
 smash_haar: smash_analyze.R + R(res=smash.wavelet(mu_true, y,model="gaus",filter.number=fnum,family=family))
+  mu_true: $mu_true
   fnum: 1
   family: DaubExPhase
   y: $Y
