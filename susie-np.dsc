@@ -15,7 +15,7 @@
 
 # simulate modules
 
-sim_gauss: simulate.R + R(data = simulate.gaussian.1d(n,scenario,pve))
+sim_gauss: simulate.R + R(data = simulate.gaussian.1d.irregular(n,scenario,pve))
   n: 100, 128, 200, 256, 300
   pve: 0.5, 0.9, 0.95, 0.99
   scenario: spikes, bumps, blocks, angles, doppler, blip
