@@ -84,4 +84,4 @@ DSC:
     score: mse
   run: simulate * analyze * score
   exec_path: code
-  R_libs: genlasso, smashr@stephenslab/smashr, susieR@stephenslab/susieR, wavethresh
+  R_libs: smashr@stephenslab/smashr, susieR@stephenslab/susieR, wavethresh
