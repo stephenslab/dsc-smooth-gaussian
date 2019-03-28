@@ -17,6 +17,26 @@ simulate.gaussian.1d = function(n,scenario= c("spikes","bumps","blocks","angles"
   return(list(y=y,t=t,mu=mu,sigma=sigma))
 }
 
+
+
+simulate.gaussian.1d.irregular = function(n,scenario= c("spikes","bumps","blocks","angles","doppler","blip"), pve = 0.9) {
+  if(pve<=0 || pve>=1){stop("pve must be strictly between 0 and 1")}
+  scenario=match.arg(scenario)
+  
+  #simulate irregular spaced x
+  set.seed(1)
+  x = sort(runif(n, 0, 1))
+  
+  meanfn = paste0(scenario,".fn")
+  mu = do.call(meanfn, list(x))
+  
+  #simulate y
+  sigma = sd(mu) * sqrt((1-pve)/pve)
+  y = rnorm(n, mu, sigma)
+  return(list(x=x,y=y,mu=mu,sigma=sigma))
+}
+
+
 spikes.fn = function(t) {
   (0.75 * exp(-500 * (t - 0.23)^2) + 1.5 * exp(-2000 * (t - 0.33)^2) + 3 * exp(-8000 * (t - 0.47)^2) + 2.25 * exp(-16000 * (t - 0.69)^2) + 0.5 * exp(-32000 * (t - 0.83)^2))
 }
@@ -33,7 +53,7 @@ bumps.fn = function(t) {
   return((1 + fn)/5)
 }
 
-blocks.fn = function(t, type) {
+blocks.fn = function(t) {
   pos = c(0.1, 0.13, 0.15, 0.23, 0.25, 0.4, 0.44, 0.65, 0.76, 0.78, 0.81)
   hgt = 2.88/5 * c(4, (-5), 3, (-4), 5, (-4.2), 2.1, 4.3, (-3.1), 2.1, (-4.2))
   fn = rep(0, length(t))
@@ -49,7 +69,7 @@ angles.fn = function(t) {
   return((1 + fn)/5)
 }
 
-doppler.fn = function(t, type) {
+doppler.fn = function(t) {
   dop.f = function(x) sqrt(x * (1 - x)) * sin((2 * pi * 1.05)/(x + 0.05))
   fn = dop.f(t)
   fn = 3/(max(fn) - min(fn)) * (fn - min(fn))
@@ -57,7 +77,7 @@ doppler.fn = function(t, type) {
 }
 
 
-blip.fn = function(t, type) {
+blip.fn = function(t) {
   fn = (0.32 + 0.6 * t + 0.3 * exp(-100 * (t - 0.3)^2)) * (t >= 0 & t <= 0.8) + (-0.28 + 0.6 * t + 0.3 * exp(-100 * (t - 1.3)^2)) * (t > 0.8 & t <= 1)
   return(fn)
 }

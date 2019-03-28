@@ -1,0 +1,63 @@
+library(susieR)
+library(wavethresh)
+
+susie.wavelet = function(x, y, wavelet_type, estimate_residual_variance_MAD=FALSE){
+  m = as.numeric(ceiling(1/quantile(sort(abs(diff(x))),0.1)))
+  K = 2^(ceiling(log2(m)))
+  R = create.interpolation.matrix(x)
+  if(wavelet_type=="Haar"){
+    Wt = GenW(n=K, filter.number=1, family="DaubExPhase")
+  } else if(wavelet_type=="Symlet"){
+    Wt = GenW(n=K, filter.number=10, family="DaubLeAsymm", bc="periodic")
+  } else{
+    stop("wavelet_type should be either Haar or Symlet.")
+  }
+  RWt = R %*% Wt
+  
+  if(estimate_residual_variance_MAD){
+    #estimate residual variance using MAD method first, run susie
+    #initialize from the susie fit above
+    est.resid = estimate.residual.variance.MAD(y)
+    s.est_resid= susie(RWt, y, L=50, estimate_prior_variance = TRUE, estimate_prior_method = 'optim', estimate_residual_variance = FALSE, residual_variance = est.resid)
+    res = susie(RWt, y, estimate_prior_variance = TRUE, estimate_prior_method = 'optim', s_init = s.est_resid)
+    return(res)
+  }
+  #run susie with fixed residual variance as an initialization
+  s.fix = susie(RWt, y, L=50, estimate_prior_variance = TRUE, estimate_prior_method = 'optim', estimate_residual_variance = FALSE, residual_variance = 0.01)
+  res = susie(RWt, y, estimate_prior_variance = TRUE, estimate_prior_method = 'optim', s_init = s.fix)
+  return(res)
+}
+
+estimate.residual.variance.MAD = function(y){
+  n = length(y)
+  y_reflect = c(y, rev(y))
+  J = floor(log2(2*n))
+  y_reflect = y_reflect[1:2^J]
+  y_reflect = c(y_reflect, rev(y_reflect))
+  ywd <- wd(y_reflect, filter.number=1, family="DaubExPhase")
+  wc_d = accessD(ywd, level=J-1)
+  est.resid = (median(abs(wc_d))/0.6745)^2
+  return(est.resid)
+}
+
+#' @param x is an n-vector of data
+#' @return R an n by K interpolation matrix
+create.interpolation.matrix = function(x){
+  n = length(x)
+  #m = 10% * abs(x_i - x_{i+1})
+  m = as.numeric(ceiling(1/quantile(sort(abs(diff(x))),0.1)))
+  K = 2^(ceiling(log2(m)))
+  R = matrix(0, n, K)
+  for (i in 1:n){
+    for (j in 1:K){
+      if (j == 1 & x[i] <= 1/K){
+        R[i,j] = 1
+      } else if (j == floor(K*x[i]) & x[i] > 1/K & x[i] <=1){
+        R[i,j] = (j+1) - K*x[i]
+      } else if (j == ceiling(K*x[i]) & x[i] > 1/K & x[i] <=1){
+        R[i,j] = K*x[i] - (j-1)
+      } else R[i,j] = 0
+    }
+  }
+  return(R)
+}
