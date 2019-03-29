@@ -55,7 +55,6 @@ smash_haar: smash_analyze.R + R(res=smash.wavelet(mu_true, y,model="gaus",filter
   fnum: 1
   family: "DaubExPhase"
   y: $Y
-  $mu_true: res$mu_reflect
   $mu_est: res$s
 
 # smash with Symlet 8 wavelet
@@ -71,9 +70,9 @@ smash_s10(smash_s8):
 
 # score
 
-mse: R(e = mean((a-b)^2))
-  a: $mu_est
-  b: $mu_true
+mse: score.R + R(e = compute_mse(mu_est, mu_true))
+  mu_est: $mu_est
+  mu_true: $mu_true
   $error: e
 
 
