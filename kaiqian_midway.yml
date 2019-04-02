@@ -51,4 +51,5 @@ simulate:
   time_per_instance: 2m
   
 score:
-  time_per_instance: 2m
+  time_per_instance: 1m
+  instances_per_job: 200
