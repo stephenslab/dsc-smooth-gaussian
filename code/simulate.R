@@ -24,7 +24,6 @@ simulate.gaussian.1d.irregular = function(n,scenario= c("spikes","bumps","blocks
   scenario=match.arg(scenario)
   
   #simulate irregular spaced x
-  set.seed(1)
   x = sort(runif(n, 0, 1))
   
   meanfn = paste0(scenario,".fn")
