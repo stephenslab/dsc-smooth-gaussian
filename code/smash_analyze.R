@@ -1,6 +1,6 @@
 library(smashr)
 
-smash.wavelet = function(mu_true, y,model="gaus",filter.number=fnum,family=family){
+smash.wavelet = function(y,model="gaus",filter.number=fnum,family=family){
   n = length(y)
   y_reflect = c(y, rev(y))
   J = floor(log2(2*n))
