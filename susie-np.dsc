@@ -15,7 +15,7 @@
 
 # simulate modules
 
-sim_gauss: R(data = simulate.gaussian.1d.irregular(n,scenario,pve))
+sim_gauss: R(data = simulate_gaussian_1d_irregular(n,scenario,pve))
   n: 100, 128, 200, 256, 300
   pve: 0.5, 0.9, 0.95, 0.99
   scenario: "spikes", "bumps", "blocks", "angles", "doppler", "blip"
@@ -29,7 +29,7 @@ sim_gauss: R(data = simulate.gaussian.1d.irregular(n,scenario,pve))
 # analyze
 
 # susie with Haar wavelet
-susie_haar: susie_analyze.R + R(res=susie.wavelet(x,y,wavelet_type,estimate_residual_variance_MAD))
+susie_haar: susie_analyze.R + R(res=susie_wavelet(x,y,wavelet_type,estimate_residual_variance_MAD))
   x: $X
   y: $Y
   wavelet_type: "Haar"
@@ -50,7 +50,7 @@ susie_s10_MAD(susie_s10):
   
 
 # smash with Haar wavelet
-smash_haar: smash_analyze.R + R(res=smash.wavelet(y,model="gaus",filter.number=fnum,family=family))
+smash_haar: smash_analyze.R + R(res=smash_wavelet(y,model="gaus",filter.number=fnum,family=family))
   fnum: 1
   family: "DaubExPhase"
   y: $Y

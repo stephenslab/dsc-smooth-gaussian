@@ -1,10 +1,10 @@
 library(susieR)
 library(wavethresh)
 
-susie.wavelet = function(x, y, wavelet_type, estimate_residual_variance_MAD=FALSE){
+susie_wavelet = function(x, y, wavelet_type, estimate_residual_variance_MAD=FALSE){
   m = as.numeric(ceiling(1/quantile(sort(abs(diff(x))),0.1)))
   K = 2^(ceiling(log2(m)))
-  R = create.interpolation.matrix(x)
+  R = create_interpolation_matrix(x)
   if(wavelet_type=="Haar"){
     Wt = GenW(n=K, filter.number=1, family="DaubExPhase")
   } else if(wavelet_type=="Symlet"){
@@ -17,7 +17,7 @@ susie.wavelet = function(x, y, wavelet_type, estimate_residual_variance_MAD=FALS
   if(estimate_residual_variance_MAD){
     #estimate residual variance using MAD method first, run susie
     #initialize from the susie fit above
-    est.resid = estimate.residual.variance.MAD(y)
+    est.resid = estimate_residual_variance_MAD(y)
     s.est_resid= susie(RWt, y, L=50, estimate_prior_variance = TRUE, estimate_prior_method = 'optim', estimate_residual_variance = FALSE, residual_variance = est.resid)
     res = susie(RWt, y, estimate_prior_variance = TRUE, estimate_prior_method = 'optim', s_init = s.est_resid)
     return(res)
@@ -28,7 +28,7 @@ susie.wavelet = function(x, y, wavelet_type, estimate_residual_variance_MAD=FALS
   return(res)
 }
 
-estimate.residual.variance.MAD = function(y){
+estimate_residual_variance_MAD = function(y){
   n = length(y)
   y_reflect = c(y, rev(y))
   J = floor(log2(2*n))
@@ -42,7 +42,7 @@ estimate.residual.variance.MAD = function(y){
 
 #' @param x is an n-vector of data
 #' @return R an n by K interpolation matrix
-create.interpolation.matrix = function(x){
+create_interpolation_matrix = function(x){
   n = length(x)
   #m = 10% * abs(x_i - x_{i+1})
   m = as.numeric(ceiling(1/quantile(sort(abs(diff(x))),0.1)))

@@ -19,7 +19,7 @@ simulate.gaussian.1d = function(n,scenario= c("spikes","bumps","blocks","angles"
 
 
 
-simulate.gaussian.1d.irregular = function(n,scenario= c("spikes","bumps","blocks","angles","doppler","blip"), pve = 0.9) {
+simulate_gaussian_1d_irregular = function(n,scenario= c("spikes","bumps","blocks","angles","doppler","blip"), pve = 0.9) {
   if(pve<=0 || pve>=1){stop("pve must be strictly between 0 and 1")}
   scenario=match.arg(scenario)
   
