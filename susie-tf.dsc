@@ -46,7 +46,7 @@ DSC:
     analyze: susie_tf, susie_tf_MAD, susie_tf_smallresid
     score: mse
   run: simulate * analyze * score
-  exec_path: code
+  lib_path: code
   R_libs: susieR@stephenslab/susieR, wavethresh
 
 
