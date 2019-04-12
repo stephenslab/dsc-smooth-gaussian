@@ -24,33 +24,31 @@ sim_gauss: R(data = simulate_gaussian_1d_irregular(n,scenario,pve))
   $sigma: data$sigma
   $mu_true: data$mu
 
-
-
 # analyze
 
 # susie with Haar wavelet
-susie_haar: susie_analyze.R + R(res=susie_wavelet(x,y,wavelet_type,estimate_residual_variance_MAD))
+susie_haar: R(res=susie_wavelet(x,y,wavelet_type,estimate_residual_variance_MAD))
   x: $X
   y: $Y
   wavelet_type: "Haar"
   estimate_residual_variance_MAD: FALSE
   $mu_est: predict(res)
-  
+
 # susie with Symlet wavelet
 susie_s10(susie_haar):
   wavelet_type: "Symlet"
-  
+
 # susie with Haar wavelet and use MAD
 susie_haar_MAD(susie_haar):
   estimate_residual_variance_MAD: TRUE
-  
+
 # susie with Symlet wavelet and use MAD
 susie_s10_MAD(susie_s10):
   estimate_residual_variance_MAD: TRUE
-  
+
 
 # smash with Haar wavelet
-smash_haar: smash_analyze.R + R(res=smash_wavelet(y,model="gaus",filter.number=fnum,family=family))
+smash_haar: R(res=smash_wavelet(y,model="gaus",filter.number=fnum,family=family))
   fnum: 1
   family: "DaubExPhase"
   y: $Y
@@ -60,7 +58,7 @@ smash_haar: smash_analyze.R + R(res=smash_wavelet(y,model="gaus",filter.number=f
 smash_s8(smash_haar):
   fnum: 8
   family: "DaubLeAsymm"
-  
+
 # smash with Symlet 10 wavelet
 smash_s10(smash_s8):
   fnum: 10

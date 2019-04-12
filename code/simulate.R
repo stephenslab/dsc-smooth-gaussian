@@ -22,19 +22,24 @@ simulate.gaussian.1d = function(n,scenario= c("spikes","bumps","blocks","angles"
 simulate_gaussian_1d_irregular = function(n,scenario= c("spikes","bumps","blocks","angles","doppler","blip"), pve = 0.9) {
   if(pve<=0 || pve>=1){stop("pve must be strictly between 0 and 1")}
   scenario=match.arg(scenario)
-  
+
   #simulate irregular spaced x
   x = sort(runif(n, 0, 1))
-  
+
   meanfn = paste0(scenario,".fn")
   mu = do.call(meanfn, list(x))
-  
+
   #simulate y
   sigma = sd(mu) * sqrt((1-pve)/pve)
   y = rnorm(n, mu, sigma)
   return(list(x=x,y=y,mu=mu,sigma=sigma))
 }
 
+simulate_hard_tf = function(n, residual_variance, base_value, change_value){
+  mu = c(rep(base_value,floor(n/2)),rep(change_value,2),rep(base_value, n-floor(n/2)-2))
+  y = mu + rnorm(n, sd=sqrt(residual_variance))
+  return(list(y=y,mu=mu))
+}
 
 spikes.fn = function(t) {
   (0.75 * exp(-500 * (t - 0.23)^2) + 1.5 * exp(-2000 * (t - 0.33)^2) + 3 * exp(-8000 * (t - 0.47)^2) + 2.25 * exp(-16000 * (t - 0.69)^2) + 0.5 * exp(-32000 * (t - 0.83)^2))

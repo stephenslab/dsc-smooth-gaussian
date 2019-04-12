@@ -13,7 +13,7 @@ susie_wavelet = function(x, y, wavelet_type, estimate_residual_variance_MAD=FALS
     stop("wavelet_type should be either Haar or Symlet.")
   }
   RWt = R %*% Wt
-  
+
   if(estimate_residual_variance_MAD){
     #estimate residual variance using MAD method first, run susie
     #initialize from the susie fit above
@@ -61,3 +61,37 @@ create_interpolation_matrix = function(x){
   }
   return(R)
 }
+
+susie_tf_analyze = function(y, order, use_MAD_init, use_small_residual_variance_init){
+  if (use_MAD_init){
+    MAD_est = estimate_residual_variance_MAD(y)
+    s_init = susie_trendfilter(y, order, estimate_residual_variance=FALSE, residual_variance=MAD_est)
+    s = susie_trendfilter(y, order, s_init=s_init)
+  }
+  if (use_small_residual_variance_init){
+    s_init = susie_trendfilter(y, order, estimate_residual_variance=FALSE, residual_variance=0.01)
+    s = susie_trendfilter(y, order, s_init=s_init)
+  }
+  if (!use_MAD_init & !use_small_residual_variance_init){
+    s = susie_trendfilter(y, order)
+  }
+  return(s)
+}
+
+estimate_residual_variance_MAD = function(y){
+  n = length(y)
+  y_reflect = c(y, rev(y))
+  J = floor(log2(2*n))
+  y_reflect = y_reflect[1:2^J]
+  y_reflect = c(y_reflect, rev(y_reflect))
+  ywd <- wd(y_reflect, filter.number=1, family="DaubExPhase")
+  wc_d = accessD(ywd, level=J-1)
+  est.resid = (median(abs(wc_d))/0.6745)^2
+  return(est.resid)
+}
+
+
+
+
+
+
