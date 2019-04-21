@@ -13,10 +13,10 @@
 # score: $mu_true, $mu_est -> $error
 
 # simulate modules
-sim_gauss: R(data = simulate_hard_tf(n, residual_variance, base_value = 0, change_value))
+sim_gauss: R(data = simulate_tf_order0(n, cp_num, residual_variance))
   n: 100, 300, 500, 1000, 2000
+  cp_num: 1, 3, 5, 10, 15, 30, 50
   residual_variance: 0.01, 0.05, 0.1, 0.5, 1
-  change_value: 3, 5, 10, 15, 30, 100
   $Y: data$y
   $mu_true: data$mu
 
@@ -47,7 +47,7 @@ DSC:
     score: mse
   run: simulate * analyze * score
   lib_path: code
-  R_libs: susieR@stephenslab/susieR, wavethresh
+  R_libs: susieR@stephenslab/susieR, wavethresh, susieR@stephenslab/smashr
 
 
 

@@ -41,6 +41,36 @@ simulate_hard_tf = function(n, residual_variance, base_value, change_value){
   return(list(y=y,mu=mu))
 }
 
+#' @title this function randomly simulates piecewise-constant data
+#' @param n the number of data points
+#' @param cp_num the number of change points
+#' @param residual_variance residual variance for the data
+#' @return a list includes simulated data and ground truth trend
+simulate_tf_order0 = function(n, cp_num, residual_variance){
+  if (cp_num > n) {
+    stop("The number of change points should be smaller than the number of data points.")
+  }
+  cp_idx = sort((sample(n, cp_num)))
+  y_grid = 2*seq(-50, 50) #assume the number of change points is less than 100
+  cp_val = y_grid[sample(length(y_grid), cp_num+1)]
+  mu = create(n, cp_idx, cp_val)
+  y = mu + rnorm(n, sd=sqrt(residual_variance))
+  return(list(y=y, mu=mu))
+}
+
+create_tf_order0_mu = function(n, cp_idx, cp_val){
+  cp_idx = c(0, cp_idx, n)
+  interval = diff(cp_idx)
+  mu = numeric()
+  for (i in 1:length(cp_val)) {
+    mu = c(mu, rep(cp_val[i], interval[i]))
+  }
+  return(mu)
+}
+
+
+
+
 spikes.fn = function(t) {
   (0.75 * exp(-500 * (t - 0.23)^2) + 1.5 * exp(-2000 * (t - 0.33)^2) + 3 * exp(-8000 * (t - 0.47)^2) + 2.25 * exp(-16000 * (t - 0.69)^2) + 0.5 * exp(-32000 * (t - 0.83)^2))
 }
