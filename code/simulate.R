@@ -51,9 +51,9 @@ simulate_tf_order0 = function(n, cp_num, residual_variance){
     stop("The number of change points should be smaller than the number of data points.")
   }
   cp_idx = sort((sample(n, cp_num)))
-  y_grid = 2*seq(-50, 50) #assume the number of change points is less than 100
+  y_grid = 2*seq(-20, 50) #assume the number of change points is less than 140
   cp_val = y_grid[sample(length(y_grid), cp_num+1)]
-  mu = create(n, cp_idx, cp_val)
+  mu = create_tf_order0_mu(n, cp_idx, cp_val)
   y = mu + rnorm(n, sd=sqrt(residual_variance))
   return(list(y=y, mu=mu))
 }
