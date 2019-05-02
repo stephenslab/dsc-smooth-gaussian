@@ -52,7 +52,7 @@ mse: R(e = compute_mse(mu_est, mu_true))
 DSC:
   define:
     simulate: sim_gauss
-    analyze: susie_tf, susie_tf_MAD, susie_tf_smallresid
+    analyze: susie_tf, susie_tf_MAD_only, susie_tf_MAD_init, susie_tf_smallresid_init, naive_method
     score: mse
   run: simulate * analyze * score
   lib_path: code
