@@ -42,13 +42,13 @@ DSC:
 
 default:
   queue: midway2_head
-  time_per_instance: 10m
-  instances_per_job: 100
+  time_per_instance: 10s
+  instances_per_job: 300
   n_cpu: 1
   mem_per_cpu: 3G
 
 simulate:
-  time_per_instance: 2m
+  time_per_instance: 1m
   instances_per_job: 50
 
 naive_method:
@@ -56,5 +56,5 @@ naive_method:
   instances_per_job: 400
 
 score:
-  time_per_instance: 1m
+  time_per_instance: 10s
   instances_per_job: 400
