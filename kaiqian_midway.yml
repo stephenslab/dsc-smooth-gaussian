@@ -51,6 +51,10 @@ simulate:
   time_per_instance: 2m
   instances_per_job: 50
 
+naive_method:
+  time_per_instance: 5s
+  instances_per_job: 400
+
 score:
   time_per_instance: 1m
   instances_per_job: 400
