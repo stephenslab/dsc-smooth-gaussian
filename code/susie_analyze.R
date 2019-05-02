@@ -62,7 +62,11 @@ create_interpolation_matrix = function(x){
   return(R)
 }
 
-susie_tf_analyze = function(y, order, use_MAD_init, use_small_residual_variance_init){
+susie_tf_analyze = function(y, order, use_MAD_init, use_small_residual_variance_init, use_MAD_only){
+  if (use_MAD_only){
+    MAD_est = estimate_residual_variance_MAD(y)
+    s = susie_trendfilter(y, order, estimate_residual_variance=FALSE, residual_variance=MAD_est)
+  }
   if (use_MAD_init){
     MAD_est = estimate_residual_variance_MAD(y)
     s_init = susie_trendfilter(y, order, estimate_residual_variance=FALSE, residual_variance=MAD_est)
@@ -72,7 +76,7 @@ susie_tf_analyze = function(y, order, use_MAD_init, use_small_residual_variance_
     s_init = susie_trendfilter(y, order, estimate_residual_variance=FALSE, residual_variance=0.01)
     s = susie_trendfilter(y, order, s_init=s_init)
   }
-  if (!use_MAD_init & !use_small_residual_variance_init){
+  if (!use_MAD_init & !use_small_residual_variance_init & !use_MAD_only){
     s = susie_trendfilter(y, order)
   }
   return(s)

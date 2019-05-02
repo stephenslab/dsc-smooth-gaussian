@@ -13,26 +13,35 @@
 # score: $mu_true, $mu_est -> $error
 
 # simulate modules
-sim_gauss: R(data = simulate_tf_order0(n, cp_num, residual_variance))
+sim_gauss: R(data = simulate_tf_order0(n, cp_num, residual_sd))
   n: 100, 300, 500, 1000, 2000
   cp_num: 1, 3, 5, 10, 15, 30, 50
-  residual_variance: 0.01, 0.05, 0.1, 0.5, 1
+  residual_sd: 0.001, 0.01, 0.02, 0.03, 0.05, 0.1
   $Y: data$y
   $mu_true: data$mu
 
 # analyze
-susie_tf: R(fit = susie_tf_analyze(y, order, use_MAD_init, use_small_residual_variance_init))
+susie_tf: R(fit = susie_tf_analyze(y, order, use_MAD_init, use_small_residual_variance_init, use_MAD_only))
   y: $Y
   order: 0
   use_MAD_init: FALSE
   use_small_residual_variance_init: FALSE
+  use_MAD_only: FALSE
   $mu_est: predict(fit)
 
-susie_tf_MAD(susie_tf):
+susie_tf_MAD_only(susie_tf):
+  use_MAD_only: TRUE
+
+susie_tf_MAD_init(susie_tf):
   use_MAD_init: TRUE
 
-susie_tf_smallresid(susie_tf):
+susie_tf_smallresid_init(susie_tf):
   use_small_residual_variance_init: TRUE
+
+naive_method: R(mu_est = rep(mean(y), length(y)))
+  y: $Y
+  $mu_est: mu_est
+
 
 # score
 mse: R(e = compute_mse(mu_est, mu_true))

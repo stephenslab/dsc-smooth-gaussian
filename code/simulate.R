@@ -46,15 +46,15 @@ simulate_hard_tf = function(n, residual_variance, base_value, change_value){
 #' @param cp_num the number of change points
 #' @param residual_variance residual variance for the data
 #' @return a list includes simulated data and ground truth trend
-simulate_tf_order0 = function(n, cp_num, residual_variance){
+simulate_tf_order0 = function(n, cp_num, residual_sd){
   if (cp_num > n) {
     stop("The number of change points should be smaller than the number of data points.")
   }
   cp_idx = sort((sample(n, cp_num)))
-  y_grid = 2*seq(-20, 50) #assume the number of change points is less than 140
+  y_grid = seq(0,1, by=0.01) #assume the number of change points is less than 140
   cp_val = y_grid[sample(length(y_grid), cp_num+1)]
   mu = create_tf_order0_mu(n, cp_idx, cp_val)
-  y = mu + rnorm(n, sd=sqrt(residual_variance))
+  y = mu + rnorm(n, sd=residual_sd)
   return(list(y=y, mu=mu))
 }
 
