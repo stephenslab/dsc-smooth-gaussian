@@ -5,24 +5,21 @@ DSC:
     paths:
       home: /home/kaiqianz
     queue_type: pbs
-    status_check_interval: 60
-    max_running_jobs: 120
+    status_check_interval: 120
+    max_running_jobs: 14
     max_cores: 40
     max_walltime: "36:00:00"
     max_mem: 64G
     job_template: |
       #!/bin/bash
-      #SBATCH --time={walltime}
+      #SBATCH --time=6:00:00
       #{partition}
       #{account}
-      #SBATCH --nodes=1
-      #SBATCH --ntasks-per-node={cores}
-      #SBATCH --mem-per-cpu={mem//10**9}G
-      #SBATCH --job-name={job_name}
-      #SBATCH --output={cur_dir}/{job_name}.out
-      #SBATCH --error={cur_dir}/{job_name}.err
+      #SBATCH --mem-per-cpu=4G
+      #SBATCH --output={cur_dir}/.sos/{job_name}.stdout
+      #SBATCH --error={cur_dir}/.sos/{job_name}.stderr
       cd {cur_dir}
-      module load R
+      module load R/3.5.1
     partition: "SBATCH --partition=broadwl"
     account: ""
     submit_cmd: sbatch {job_file}
@@ -42,19 +39,4 @@ DSC:
 
 default:
   queue: midway2_head
-  time_per_instance: 10s
-  instances_per_job: 300
-  n_cpu: 1
-  mem_per_cpu: 3G
-
-simulate:
-  time_per_instance: 1m
-  instances_per_job: 50
-
-naive_method:
-  time_per_instance: 5s
-  instances_per_job: 400
-
-score:
-  time_per_instance: 10s
-  instances_per_job: 400
+  instances_per_job: 100
