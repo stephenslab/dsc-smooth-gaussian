@@ -1,0 +1,54 @@
+---
+title: "How to query DSC results?"
+author: "Kaiqian Zhang"
+date: "5/3/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This vignette will explain how to query DSC results, specifically for the benchmarks in the `dsc-smooth-gaussian` repo. For further details, please refer to [DSC-wiki](https://stephenslab.github.io/dsc-wiki/overview).  
+
+## Query DSC results for wavelet-based SuSiE benchmark
+
+After running the command
+
+```
+dsc susie-np.dsc --host kaiqian_midway.yml --replicate 30 -c 4
+```
+, all DSC results are saved in the folder `susie-np`. Now we open the R console and use the following commands,
+
+```
+library(dscrutils)
+```
+```
+dscout <- dscquery(dsc.outdir="susie-np"", targets=c("simulate.n", "simulate.pve", "simulate.scenario", "analyze", "score.error"))
+```
+```
+saveRDS(dscout, "susie-np-dscout30.RDS")
+```
+
+Now we obtain a RDS file for `susie-np` benchmark results. We have this data file saved under the `data` folder in the [`susie-np` repo](https://github.com/KaiqianZhang/susie-np/tree/master/data). 
+
+## Query DSC results for trend filtering-based SuSiE benchmark
+
+Similarly, after running the command
+
+```
+dsc susie-tf.dsc --replicate 50 -c 10
+```
+, all DSC results are saved in the folder `susie-tf`. Now we open the R console and use the following commands,
+
+```
+library(dscrutils)
+```
+```
+dscout <- dscquery(dsc.outdir="susie-tf", targets=c("simulate.n", "simulate.cp_num", "simulate.residual_sd", "analyze", "score.error"))
+```
+```
+saveRDS(dscout, "susie-tf-final-dscout.RDS")
+```
+
+Now we obtain a RDS file for `susie-tf` benchmark results. We have this data file saved under the `data` folder in the [`susie-np` repo](https://github.com/KaiqianZhang/susie-np/tree/master/data). 
