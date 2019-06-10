@@ -26,6 +26,7 @@ susie_tf: R(fit = susie_mad_analyze(y, order, use_mad, mad))
   order: 0
   use_mad: FALSE
   mad: 1
+  $mu_est: predict(fit)
 
 susie_tf_MAD_original(susie_tf):
   use_mad: TRUE
